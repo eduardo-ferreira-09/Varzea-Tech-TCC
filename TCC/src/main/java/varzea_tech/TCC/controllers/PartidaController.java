@@ -1,5 +1,6 @@
 package varzea_tech.TCC.controllers;
 
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import varzea_tech.TCC.dtos.PartidaResponseDTO;
@@ -22,7 +23,7 @@ public class PartidaController {
     private UsuarioRepository usuarioRepository;
 
     @PostMapping
-    public PartidaResponseDTO criarPartida(@RequestBody Partida partida) {
+    public PartidaResponseDTO criarPartida(@Valid @RequestBody Partida partida) {
         // Vai buscar o utilizador completo à base de dados usando o ID antes de guardar
         if (partida.getUsuario() != null && partida.getUsuario().getId() != null) {
             Usuario usuarioCompleto = usuarioRepository.findById(partida.getUsuario().getId()).orElse(null);
@@ -40,6 +41,7 @@ public class PartidaController {
                 .map(this::converterParaDTO)
                 .toList();
     }
+
 
     private PartidaResponseDTO converterParaDTO(Partida partida) {
         UsuarioResponseDTO usuarioDTO = null;
