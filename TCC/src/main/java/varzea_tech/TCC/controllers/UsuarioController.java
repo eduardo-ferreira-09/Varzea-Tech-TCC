@@ -17,7 +17,6 @@ public class UsuarioController {
     private UsuarioRepository usuarioRepository;
 
     @PostMapping
-    // Repare no @Valid aqui em baixo! É ele que obriga a testar as regras antes de guardar.
     public UsuarioResponseDTO criarUsuario(@Valid @RequestBody Usuario usuario) {
         Usuario usuarioSalvo = usuarioRepository.save(usuario);
         return new UsuarioResponseDTO(usuarioSalvo.getId(), usuarioSalvo.getNome(), usuarioSalvo.getEmail());
@@ -29,5 +28,30 @@ public class UsuarioController {
         return usuarios.stream()
                 .map(u -> new UsuarioResponseDTO(u.getId(), u.getNome(), u.getEmail()))
                 .toList();
+    }
+
+
+    @PutMapping("/{id}")
+    public UsuarioResponseDTO atualizarUsuario(@PathVariable Long id, @Valid @RequestBody Usuario usuarioAtualizado) {
+        // Procura o utilizador na base de dados. Se não encontrar, dá erro.
+        Usuario usuarioExistente = usuarioRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Utilizador não encontrado com o ID: " + id));
+
+
+        usuarioExistente.setNome(usuarioAtualizado.getNome());
+        usuarioExistente.setEmail(usuarioAtualizado.getEmail());
+        usuarioExistente.setSenha(usuarioAtualizado.getSenha());
+
+
+        Usuario usuarioSalvo = usuarioRepository.save(usuarioExistente);
+
+
+        return new UsuarioResponseDTO(usuarioSalvo.getId(), usuarioSalvo.getNome(), usuarioSalvo.getEmail());
+    }
+
+
+    @DeleteMapping("/{id}")
+    public void deletarUsuario(@PathVariable Long id) {
+        usuarioRepository.deleteById(id);
     }
 }

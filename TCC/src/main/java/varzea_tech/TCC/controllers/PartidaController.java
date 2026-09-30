@@ -22,17 +22,17 @@ public class PartidaController {
     @Autowired
     private UsuarioRepository usuarioRepository;
 
+
     @PostMapping
     public PartidaResponseDTO criarPartida(@Valid @RequestBody Partida partida) {
-        // Vai buscar o utilizador completo à base de dados usando o ID antes de guardar
         if (partida.getUsuario() != null && partida.getUsuario().getId() != null) {
             Usuario usuarioCompleto = usuarioRepository.findById(partida.getUsuario().getId()).orElse(null);
             partida.setUsuario(usuarioCompleto);
         }
-
         Partida partidaSalva = partidaRepository.save(partida);
         return converterParaDTO(partidaSalva);
     }
+
 
     @GetMapping
     public List<PartidaResponseDTO> listarPartidas() {
@@ -40,6 +40,31 @@ public class PartidaController {
         return partidas.stream()
                 .map(this::converterParaDTO)
                 .toList();
+    }
+
+
+    @PutMapping("/{id}")
+    public PartidaResponseDTO atualizarPartida(@PathVariable Long id, @Valid @RequestBody Partida partidaAtualizada) {
+        Partida partidaExistente = partidaRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Partida não encontrada com o ID: " + id));
+
+        partidaExistente.setNome(partidaAtualizada.getNome());
+        partidaExistente.setRegiao(partidaAtualizada.getRegiao());
+        partidaExistente.setJogadores(partidaAtualizada.getJogadores());
+
+        if (partidaAtualizada.getUsuario() != null && partidaAtualizada.getUsuario().getId() != null) {
+            Usuario usuarioCompleto = usuarioRepository.findById(partidaAtualizada.getUsuario().getId()).orElse(null);
+            partidaExistente.setUsuario(usuarioCompleto);
+        }
+
+        Partida partidaSalva = partidaRepository.save(partidaExistente);
+        return converterParaDTO(partidaSalva);
+    }
+
+
+    @DeleteMapping("/{id}")
+    public void deletarPartida(@PathVariable Long id) {
+        partidaRepository.deleteById(id);
     }
 
 
