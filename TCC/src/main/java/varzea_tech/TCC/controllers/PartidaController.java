@@ -22,7 +22,6 @@ public class PartidaController {
     @Autowired
     private UsuarioRepository usuarioRepository;
 
-
     @PostMapping
     public PartidaResponseDTO criarPartida(@Valid @RequestBody Partida partida) {
         if (partida.getUsuario() != null && partida.getUsuario().getId() != null) {
@@ -33,7 +32,6 @@ public class PartidaController {
         return converterParaDTO(partidaSalva);
     }
 
-
     @GetMapping
     public List<PartidaResponseDTO> listarPartidas() {
         List<Partida> partidas = partidaRepository.findAll();
@@ -41,15 +39,32 @@ public class PartidaController {
                 .map(this::converterParaDTO)
                 .toList();
     }
+    // NOVA ROTA: Barra de pesquisa (Filtro)
+    @GetMapping("/buscar")
+    public List<PartidaResponseDTO> buscarPartidas(@RequestParam String termo) {
 
+        // Vai à base de dados procurar o termo tanto no Nome da arena como no Endereço
+        List<Partida> partidas = partidaRepository.findByNomeContainingIgnoreCaseOrEnderecoContainingIgnoreCase(termo, termo);
 
+        // Converte os resultados para o formato seguro (DTO) e devolve
+        return partidas.stream()
+                .map(this::converterParaDTO)
+                .toList();
+    }
     @PutMapping("/{id}")
     public PartidaResponseDTO atualizarPartida(@PathVariable Long id, @Valid @RequestBody Partida partidaAtualizada) {
         Partida partidaExistente = partidaRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Partida não encontrada com o ID: " + id));
 
         partidaExistente.setNome(partidaAtualizada.getNome());
-        partidaExistente.setRegiao(partidaAtualizada.getRegiao());
+        // NOVOS CAMPOS (A regiao foi removida daqui)
+        partidaExistente.setTipoCampo(partidaAtualizada.getTipoCampo());
+        partidaExistente.setDataHora(partidaAtualizada.getDataHora());
+        partidaExistente.setCep(partidaAtualizada.getCep());
+        partidaExistente.setEndereco(partidaAtualizada.getEndereco());
+        partidaExistente.setNumero(partidaAtualizada.getNumero());
+        partidaExistente.setComplemento(partidaAtualizada.getComplemento());
+        partidaExistente.setFotoQuadra(partidaAtualizada.getFotoQuadra());
         partidaExistente.setJogadores(partidaAtualizada.getJogadores());
 
         if (partidaAtualizada.getUsuario() != null && partidaAtualizada.getUsuario().getId() != null) {
@@ -61,12 +76,10 @@ public class PartidaController {
         return converterParaDTO(partidaSalva);
     }
 
-
     @DeleteMapping("/{id}")
     public void deletarPartida(@PathVariable Long id) {
         partidaRepository.deleteById(id);
     }
-
 
     private PartidaResponseDTO converterParaDTO(Partida partida) {
         UsuarioResponseDTO usuarioDTO = null;
@@ -74,13 +87,20 @@ public class PartidaController {
             usuarioDTO = new UsuarioResponseDTO(
                     partida.getUsuario().getId(),
                     partida.getUsuario().getNome(),
-                    partida.getUsuario().getEmail()
+                    partida.getUsuario().getEmail(),
+                    partida.getUsuario().getWhatsapp() // NOVO CAMPO
             );
         }
         return new PartidaResponseDTO(
                 partida.getId(),
                 partida.getNome(),
-                partida.getRegiao(),
+                partida.getTipoCampo(),
+                partida.getDataHora(),
+                partida.getCep(),
+                partida.getEndereco(),
+                partida.getNumero(),
+                partida.getComplemento(),
+                partida.getFotoQuadra(),
                 partida.getJogadores(),
                 usuarioDTO
         );

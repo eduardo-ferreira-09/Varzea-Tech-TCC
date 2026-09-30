@@ -2,7 +2,10 @@ package varzea_tech.TCC.controllers;
 
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import varzea_tech.TCC.dtos.LoginDTO;
 import varzea_tech.TCC.dtos.UsuarioResponseDTO;
 import varzea_tech.TCC.models.Usuario;
 import varzea_tech.TCC.repositories.UsuarioRepository;
@@ -19,39 +22,59 @@ public class UsuarioController {
     @PostMapping
     public UsuarioResponseDTO criarUsuario(@Valid @RequestBody Usuario usuario) {
         Usuario usuarioSalvo = usuarioRepository.save(usuario);
-        return new UsuarioResponseDTO(usuarioSalvo.getId(), usuarioSalvo.getNome(), usuarioSalvo.getEmail());
+        return new UsuarioResponseDTO(usuarioSalvo.getId(), usuarioSalvo.getNome(), usuarioSalvo.getEmail(), usuarioSalvo.getWhatsapp());
     }
 
     @GetMapping
     public List<UsuarioResponseDTO> listarUsuarios() {
         List<Usuario> usuarios = usuarioRepository.findAll();
         return usuarios.stream()
-                .map(u -> new UsuarioResponseDTO(u.getId(), u.getNome(), u.getEmail()))
+                .map(u -> new UsuarioResponseDTO(u.getId(), u.getNome(), u.getEmail(), u.getWhatsapp()))
                 .toList();
     }
 
-
     @PutMapping("/{id}")
     public UsuarioResponseDTO atualizarUsuario(@PathVariable Long id, @Valid @RequestBody Usuario usuarioAtualizado) {
-        // Procura o utilizador na base de dados. Se não encontrar, dá erro.
         Usuario usuarioExistente = usuarioRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Utilizador não encontrado com o ID: " + id));
-
 
         usuarioExistente.setNome(usuarioAtualizado.getNome());
         usuarioExistente.setEmail(usuarioAtualizado.getEmail());
         usuarioExistente.setSenha(usuarioAtualizado.getSenha());
+        usuarioExistente.setWhatsapp(usuarioAtualizado.getWhatsapp());
 
+        // Novos campos sendo guardados
+        usuarioExistente.setIdade(usuarioAtualizado.getIdade());
+        usuarioExistente.setCpf(usuarioAtualizado.getCpf());
 
         Usuario usuarioSalvo = usuarioRepository.save(usuarioExistente);
-
-
-        return new UsuarioResponseDTO(usuarioSalvo.getId(), usuarioSalvo.getNome(), usuarioSalvo.getEmail());
+        return new UsuarioResponseDTO(usuarioSalvo.getId(), usuarioSalvo.getNome(), usuarioSalvo.getEmail(), usuarioSalvo.getWhatsapp());
     }
-
 
     @DeleteMapping("/{id}")
     public void deletarUsuario(@PathVariable Long id) {
         usuarioRepository.deleteById(id);
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<?> fazerLogin(@Valid @RequestBody LoginDTO loginData) {
+
+        // Procura pelo Email. Se não encontrar, tenta procurar pelo Telefone (WhatsApp)
+        Usuario usuario = usuarioRepository.findByEmail(loginData.identificacao())
+                .orElseGet(() -> usuarioRepository.findByWhatsapp(loginData.identificacao()).orElse(null));
+
+        // Valida se encontrou alguém e se a senha está correta
+        if (usuario == null || !usuario.getSenha().equals(loginData.senha())) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Email/Telefone ou senha incorretos!");
+        }
+
+        UsuarioResponseDTO resposta = new UsuarioResponseDTO(
+                usuario.getId(),
+                usuario.getNome(),
+                usuario.getEmail(),
+                usuario.getWhatsapp()
+        );
+
+        return ResponseEntity.ok(resposta);
     }
 }
