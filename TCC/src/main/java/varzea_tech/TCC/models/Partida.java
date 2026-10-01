@@ -5,6 +5,8 @@ import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import java.time.LocalDateTime;
+import java.util.ArrayList; // Novo import
+import java.util.List;      // Novo import
 
 @Entity
 public class Partida {
@@ -16,7 +18,6 @@ public class Partida {
     @NotBlank(message = "O nome da partida não pode estar vazio")
     private String nome;
 
-    // NOVOS CAMPOS
     @NotBlank(message = "O tipo do campo é obrigatório")
     private String tipoCampo;
 
@@ -32,17 +33,27 @@ public class Partida {
     @NotBlank(message = "O número é obrigatório")
     private String numero;
 
-    private String complemento; // Não é obrigatório, pode ser null
+    private String complemento;
 
-    private String fotoQuadra; // URL da imagem, não obrigatório
+    private String fotoQuadra;
 
     @NotNull(message = "A quantidade de jogadores é obrigatória")
     @Min(value = 10, message = "A partida precisa de pelo menos 10 jogadores")
     private Integer jogadores;
 
+    // O dono/organizador do racha
     @ManyToOne
     @JoinColumn(name = "usuario_id")
     private Usuario usuario;
+
+    // NOVO: A lista de jogadores que confirmaram presença!
+    @ManyToMany
+    @JoinTable(
+            name = "partida_inscricoes",
+            joinColumns = @JoinColumn(name = "partida_id"),
+            inverseJoinColumns = @JoinColumn(name = "usuario_id")
+    )
+    private List<Usuario> jogadoresConfirmados = new ArrayList<>();
 
     public Partida() {
     }
@@ -70,4 +81,8 @@ public class Partida {
     public void setJogadores(Integer jogadores) { this.jogadores = jogadores; }
     public Usuario getUsuario() { return usuario; }
     public void setUsuario(Usuario usuario) { this.usuario = usuario; }
+
+    // Getters e Setters da nova lista
+    public List<Usuario> getJogadoresConfirmados() { return jogadoresConfirmados; }
+    public void setJogadoresConfirmados(List<Usuario> jogadoresConfirmados) { this.jogadoresConfirmados = jogadoresConfirmados; }
 }

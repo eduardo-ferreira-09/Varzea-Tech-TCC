@@ -39,25 +39,21 @@ public class PartidaController {
                 .map(this::converterParaDTO)
                 .toList();
     }
-    // NOVA ROTA: Barra de pesquisa (Filtro)
+
     @GetMapping("/buscar")
     public List<PartidaResponseDTO> buscarPartidas(@RequestParam String termo) {
-
-        // Vai à base de dados procurar o termo tanto no Nome da arena como no Endereço
         List<Partida> partidas = partidaRepository.findByNomeContainingIgnoreCaseOrEnderecoContainingIgnoreCase(termo, termo);
-
-        // Converte os resultados para o formato seguro (DTO) e devolve
         return partidas.stream()
                 .map(this::converterParaDTO)
                 .toList();
     }
+
     @PutMapping("/{id}")
     public PartidaResponseDTO atualizarPartida(@PathVariable Long id, @Valid @RequestBody Partida partidaAtualizada) {
         Partida partidaExistente = partidaRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Partida não encontrada com o ID: " + id));
 
         partidaExistente.setNome(partidaAtualizada.getNome());
-        // NOVOS CAMPOS (A regiao foi removida daqui)
         partidaExistente.setTipoCampo(partidaAtualizada.getTipoCampo());
         partidaExistente.setDataHora(partidaAtualizada.getDataHora());
         partidaExistente.setCep(partidaAtualizada.getCep());
@@ -81,6 +77,38 @@ public class PartidaController {
         partidaRepository.deleteById(id);
     }
 
+    @PostMapping("/{id}/inscrever")
+    public PartidaResponseDTO inscreverJogador(@PathVariable Long id, @RequestParam Long usuarioId) {
+        Partida partida = partidaRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Partida não encontrada!"));
+
+        Usuario jogador = usuarioRepository.findById(usuarioId)
+                .orElseThrow(() -> new RuntimeException("Jogador não encontrado!"));
+
+        if (!partida.getJogadoresConfirmados().contains(jogador)) {
+            partida.getJogadoresConfirmados().add(jogador);
+            partidaRepository.save(partida);
+        }
+
+        return converterParaDTO(partida);
+    }
+
+    @DeleteMapping("/{id}/remover-inscricao/{usuarioId}")
+    public PartidaResponseDTO removerInscricao(@PathVariable Long id, @PathVariable Long usuarioId) {
+        Partida partida = partidaRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Partida não encontrada!"));
+
+        Usuario jogador = usuarioRepository.findById(usuarioId)
+                .orElseThrow(() -> new RuntimeException("Jogador não encontrado!"));
+
+        if (partida.getJogadoresConfirmados().contains(jogador)) {
+            partida.getJogadoresConfirmados().remove(jogador);
+            partidaRepository.save(partida);
+        }
+
+        return converterParaDTO(partida);
+    }
+
     private PartidaResponseDTO converterParaDTO(Partida partida) {
         UsuarioResponseDTO usuarioDTO = null;
         if (partida.getUsuario() != null) {
@@ -88,9 +116,12 @@ public class PartidaController {
                     partida.getUsuario().getId(),
                     partida.getUsuario().getNome(),
                     partida.getUsuario().getEmail(),
-                    partida.getUsuario().getWhatsapp() // NOVO CAMPO
+                    partida.getUsuario().getWhatsapp()
             );
         }
+
+        int confirmados = (partida.getJogadoresConfirmados() != null) ? partida.getJogadoresConfirmados().size() : 0;
+
         return new PartidaResponseDTO(
                 partida.getId(),
                 partida.getNome(),
@@ -102,7 +133,8 @@ public class PartidaController {
                 partida.getComplemento(),
                 partida.getFotoQuadra(),
                 partida.getJogadores(),
-                usuarioDTO
+                usuarioDTO,
+                confirmados
         );
     }
 }

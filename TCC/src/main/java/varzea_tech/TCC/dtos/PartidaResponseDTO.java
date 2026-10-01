@@ -13,5 +13,8 @@ public record PartidaResponseDTO(
         String complemento,
         String fotoQuadra,
         Integer jogadores,
-        UsuarioResponseDTO usuario
+        UsuarioResponseDTO usuario,
+
+        // NOVO: O front-end vai usar isto para mostrar no cartão!
+        Integer numeroConfirmados
 ) {}

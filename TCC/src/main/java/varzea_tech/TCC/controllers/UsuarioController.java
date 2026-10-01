@@ -43,7 +43,7 @@ public class UsuarioController {
         usuarioExistente.setSenha(usuarioAtualizado.getSenha());
         usuarioExistente.setWhatsapp(usuarioAtualizado.getWhatsapp());
 
-        // Novos campos sendo guardados
+
         usuarioExistente.setIdade(usuarioAtualizado.getIdade());
         usuarioExistente.setCpf(usuarioAtualizado.getCpf());
 
