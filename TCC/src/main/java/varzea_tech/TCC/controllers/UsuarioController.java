@@ -22,14 +22,14 @@ public class UsuarioController {
     @PostMapping
     public UsuarioResponseDTO criarUsuario(@Valid @RequestBody Usuario usuario) {
         Usuario usuarioSalvo = usuarioRepository.save(usuario);
-        return new UsuarioResponseDTO(usuarioSalvo.getId(), usuarioSalvo.getNome(), usuarioSalvo.getEmail(), usuarioSalvo.getWhatsapp());
+        return new UsuarioResponseDTO(usuarioSalvo.getId(), usuarioSalvo.getNome(), usuarioSalvo.getEmail(), usuarioSalvo.getWhatsapp(), usuarioSalvo.getPosicao(), usuarioSalvo.getFotoPerfil());
     }
 
     @GetMapping
     public List<UsuarioResponseDTO> listarUsuarios() {
         List<Usuario> usuarios = usuarioRepository.findAll();
         return usuarios.stream()
-                .map(u -> new UsuarioResponseDTO(u.getId(), u.getNome(), u.getEmail(), u.getWhatsapp()))
+                .map(u -> new UsuarioResponseDTO(u.getId(), u.getNome(), u.getEmail(), u.getWhatsapp(),  u.getPosicao(), u.getFotoPerfil()))
                 .toList();
     }
 
@@ -48,7 +48,7 @@ public class UsuarioController {
         usuarioExistente.setCpf(usuarioAtualizado.getCpf());
 
         Usuario usuarioSalvo = usuarioRepository.save(usuarioExistente);
-        return new UsuarioResponseDTO(usuarioSalvo.getId(), usuarioSalvo.getNome(), usuarioSalvo.getEmail(), usuarioSalvo.getWhatsapp());
+        return new UsuarioResponseDTO(usuarioSalvo.getId(), usuarioSalvo.getNome(), usuarioSalvo.getEmail(), usuarioSalvo.getWhatsapp(), usuarioSalvo.getPosicao(), usuarioSalvo.getFotoPerfil());
     }
 
     @DeleteMapping("/{id}")
@@ -72,7 +72,9 @@ public class UsuarioController {
                 usuario.getId(),
                 usuario.getNome(),
                 usuario.getEmail(),
-                usuario.getWhatsapp()
+                usuario.getWhatsapp(),
+                usuario.getPosicao(),
+                usuario.getFotoPerfil()
         );
 
         return ResponseEntity.ok(resposta);

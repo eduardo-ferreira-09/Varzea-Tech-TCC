@@ -116,7 +116,9 @@ public class PartidaController {
                     partida.getUsuario().getId(),
                     partida.getUsuario().getNome(),
                     partida.getUsuario().getEmail(),
-                    partida.getUsuario().getWhatsapp()
+                    partida.getUsuario().getWhatsapp(),
+                    partida.getUsuario().getPosicao(),
+                    partida.getUsuario().getFotoPerfil()
             );
         }
 
