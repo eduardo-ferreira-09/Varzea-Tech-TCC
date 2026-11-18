@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Várzea Tech - Esqueci a senha</title>
+  <meta name="color-scheme" content="dark light">
+  <meta name="theme-color" content="#030d09" media="(prefers-color-scheme: dark)">
+  <meta name="theme-color" content="#f1f7f3" media="(prefers-color-scheme: light)">
+  <script>try{var t=localStorage.getItem("vt_tema");if(t)document.documentElement.dataset.theme=t}catch(e){}</script>
+  <link rel="icon" type="image/png" href="img/favicon.png">
+  <link rel="apple-touch-icon" href="img/apple-touch-icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body data-page="esqueci">
+<main class="wrap">
+  <form class="panel narrow" id="formEsqueci">
+    <div class="brand-logo" role="img" aria-label="Várzea Tech"></div>
+    <h2>Esqueceu a senha?</h2>
+    <p class="sub">Informe seu e-mail, telefone ou usuário e enviaremos um código para você criar uma nova senha.</p>
+    <label>E-mail, telefone ou usuário*<input name="conta" required autocomplete="username"></label>
+    <div class="actions">
+      <a href="login.html" class="btn btn-line">Voltar ao login</a>
+      <button class="btn btn-solid">Enviar código</button>
+    </div>
+  </form>
+
+  <form class="panel narrow" id="formReset" hidden>
+    <h2>Criar nova senha</h2>
+    <p class="sub" id="msgEnviado"></p>
+    <p class="dica" id="demoCodigo" hidden></p>
+    <label>Código de 6 dígitos*<input name="codigo" inputmode="numeric" maxlength="6" pattern="[0-9]{6}" required autocomplete="one-time-code" placeholder="000000"></label>
+    <div class="grid-2">
+      <label>Nova senha*<span class="pw"><input type="password" name="senha" required autocomplete="new-password"><button type="button" class="eye" aria-label="Mostrar ou ocultar senha"></button></span></label>
+      <label>Confirmar senha*<span class="pw"><input type="password" name="senha2" required autocomplete="new-password"><button type="button" class="eye" aria-label="Mostrar ou ocultar senha"></button></span></label>
+    </div>
+    <ul class="rules" id="rules">
+      <li data-r="len">No mínimo 8 caracteres</li>
+      <li data-r="up">Pelo menos uma letra maiúscula</li>
+      <li data-r="low">Pelo menos uma letra minúscula</li>
+      <li data-r="num">Pelo menos um número</li>
+    </ul>
+    <div class="actions">
+      <button type="button" class="btn btn-line" id="reenviar">Pedir outro código</button>
+      <button class="btn btn-solid">Redefinir senha</button>
+    </div>
+  </form>
+</main>
+<script src="script.js"></script>
+</body>
+</html>

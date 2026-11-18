@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Várzea Tech - Meus Rachas</title>
+  <meta name="color-scheme" content="dark light">
+  <meta name="theme-color" content="#030d09" media="(prefers-color-scheme: dark)">
+  <meta name="theme-color" content="#f1f7f3" media="(prefers-color-scheme: light)">
+  <script>try{var t=localStorage.getItem("vt_tema");if(t)document.documentElement.dataset.theme=t}catch(e){}</script>
+  <link rel="icon" type="image/png" href="img/favicon.png">
+  <link rel="apple-touch-icon" href="img/apple-touch-icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body data-page="perfil">
+<main class="wrap">
+  <div class="panel wide">
+    <div class="profile-head">
+      <div class="picker" id="fotoPerfil"></div>
+      <div class="grow"><h2 id="pNome"></h2><p class="muted" id="pSub"></p></div>
+      <a class="btn btn-line btn-sm" id="pPublico">Ver perfil público</a>
+      <button class="btn btn-line btn-sm" id="sair">Sair da conta</button>
+    </div>
+
+    <details>
+      <summary>Editar perfil</summary>
+      <form id="formPerfil">
+        <div class="grid-2">
+          <label>Nome<input name="nome" required></label>
+          <label>Telefone (WhatsApp)<input name="whatsapp" type="tel" data-tel required></label>
+        </div>
+        <label class="short">Posição favorita<select name="posicao" data-opts="posicoes"></select></label>
+        <button class="btn btn-solid btn-sm">Salvar</button>
+      </form>
+    </details>
+
+    <div class="tabs">
+      <button class="tab on" data-t="jogar" data-l="Vou jogar">Vou jogar</button>
+      <button class="tab" data-t="organizo" data-l="Organizo">Organizo</button>
+      <button class="tab" data-t="pendentes" data-l="Pendentes">Pendentes</button>
+      <button class="tab" data-t="avaliar" data-l="Avaliar">Avaliar</button>
+    </div>
+    <ul class="rows" id="pLista"></ul>
+  </div>
+</main>
+<script src="script.js"></script>
+</body>
+</html>

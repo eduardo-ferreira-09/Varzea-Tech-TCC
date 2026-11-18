@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Várzea Tech - Cadastro</title>
+  <meta name="color-scheme" content="dark light">
+  <meta name="theme-color" content="#030d09" media="(prefers-color-scheme: dark)">
+  <meta name="theme-color" content="#f1f7f3" media="(prefers-color-scheme: light)">
+  <script>try{var t=localStorage.getItem("vt_tema");if(t)document.documentElement.dataset.theme=t}catch(e){}</script>
+  <link rel="icon" type="image/png" href="img/favicon.png">
+  <link rel="apple-touch-icon" href="img/apple-touch-icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body data-page="cadastro">
+<main class="wrap">
+
+  <form class="panel narrow" id="formCad" onsubmit="registrarJogador(event)">
+    <h2>Cadastro do jogador</h2>
+    <p class="sub">Crie sua conta para entrar nos rachas. Leva menos de um minuto.</p>
+    <div class="picker" id="fotoCad"></div>
+
+    <label>Nome de usuário*<span class="at"><input name="usuario" pattern="[a-zA-Z0-9._]+" title="Use apenas letras, números, ponto ou underline." maxlength="20" required></span></label>
+    <label>Nome completo*<input name="nome" required></label>
+    <div class="grid-2">
+      <label>Telefone (WhatsApp)*<input name="whatsapp" type="tel" data-tel placeholder="(00) 00000-0000" required></label>
+      <label>Posição favorita*
+        <select name="posicao" data-opts="posicoes" required>
+          <option value="" disabled selected>Selecione</option>
+          <option value="Goleiro">Goleiro</option>
+          <option value="Zagueiro">Zagueiro</option>
+          <option value="Lateral">Lateral</option>
+          <option value="Meio-Campo">Meio-Campo</option>
+          <option value="Atacante">Atacante</option>
+        </select>
+      </label>
+    </div>
+    <label>E-mail*<input name="email" type="email" required></label>
+    <div class="grid-2">
+      <label>Senha*<span class="pw"><input type="password" name="senha" required autocomplete="new-password"><button type="button" class="eye" aria-label="Mostrar ou ocultar senha"></button></span></label>
+      <label>Confirmar senha*<span class="pw"><input type="password" name="senha2" required autocomplete="new-password"><button type="button" class="eye" aria-label="Mostrar ou ocultar senha"></button></span></label>
+    </div>
+    <ul class="rules" id="rules">
+      <li data-r="len">No mínimo 8 caracteres</li>
+      <li data-r="up">Pelo menos uma letra maiúscula</li>
+      <li data-r="low">Pelo menos uma letra minúscula</li>
+      <li data-r="num">Pelo menos um número</li>
+    </ul>
+    <div class="actions">
+      <a href="login.html" class="btn btn-line">Já tenho conta</a>
+
+      <button type="submit" class="btn btn-solid">Criar conta</button>
+    </div>
+  </form>
+</main>
+<script src="script.js"></script>
+</body>
+</html>

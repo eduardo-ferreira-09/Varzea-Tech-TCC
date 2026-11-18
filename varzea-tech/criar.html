@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Várzea Tech - Criar Racha</title>
+  <meta name="color-scheme" content="dark light">
+  <meta name="theme-color" content="#030d09" media="(prefers-color-scheme: dark)">
+  <meta name="theme-color" content="#f1f7f3" media="(prefers-color-scheme: light)">
+  <script>try{var t=localStorage.getItem("vt_tema");if(t)document.documentElement.dataset.theme=t}catch(e){}</script>
+  <link rel="icon" type="image/png" href="img/favicon.png">
+  <link rel="apple-touch-icon" href="img/apple-touch-icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body data-page="criar">
+<main class="wrap">
+  <form class="panel" id="formRacha">
+    <h2 id="titulo">Criar racha de futebol</h2>
+    <p class="sub">Preencha os dados da partida. Você entra automaticamente como primeiro jogador.</p>
+
+    <h3 class="sec">
+      <svg class="ico" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="5"/><path d="M12 3v18M3 8h3v8H3M21 8h-3v8h3"/></svg>
+      Informações da partida
+    </h3>
+    <label>Nome do racha*<input name="nome" placeholder="Ex: Racha dos Amigos" maxlength="50" required></label>
+    <div class="grid-2">
+      <label>Tipo do campo*<select name="tipo" data-opts="tipos" required><option value="" disabled selected>Selecione</option></select></label>
+      <label>Visibilidade*<select name="privado" required><option value="0">Aberto (qualquer um entra)</option><option value="1">Privado (você aprova)</option></select></label>
+      <label>Vagas (jogadores)*<input name="vagas" type="number" min="2" max="60" placeholder="Ex: 14" required></label>
+      <label>Valor por jogador (R$)<input name="preco" type="number" min="0" step="0.5" placeholder="0 = grátis"></label>
+    </div>
+    <label id="lblPos">Sua posição no racha*<select name="posicao" data-opts="posicoes"></select></label>
+    <label>Regras / observações<textarea name="obs" maxlength="300" placeholder="Ex: traga colete, chuteira de society, água..."></textarea></label>
+
+    <hr class="divider">
+    <h3 class="sec">
+      <svg class="ico" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 10c0 6-8 12-8 12S4 16 4 10a8 8 0 0 1 16 0z"/><circle cx="12" cy="10" r="3"/></svg>
+      Local e horário
+    </h3>
+    <div class="grid-2">
+      <label>Nome da arena / campo*<input name="arena" placeholder="Ex: Arena Champions" required></label>
+      <label>Dia e horário*<input name="dataHora" type="datetime-local" required></label>
+      <label>CEP*<input name="cep" placeholder="00000-000" inputmode="numeric" required></label>
+      <label>Endereço*<input name="endereco" placeholder="Rua, Av..." required></label>
+      <label>Número*<input name="numero" placeholder="123" required></label>
+      <label>Complemento<input name="complemento" placeholder="Ponto de referência"></label>
+      <label>Bairro*<input name="bairro" required></label>
+      <label>Cidade*<input name="cidade" required></label>
+    </div>
+    <label class="check"><input type="checkbox" name="repetir" value="1"> Repetir toda semana (cria o próximo racha sozinho e pede a confirmação de quem jogou)</label>
+
+    <div class="field"><span class="lbl">Foto de capa (campo, galera ou jogo)</span><div id="fotoCapa"></div></div>
+
+    <div class="actions">
+      <a href="index.html" class="btn btn-line">Cancelar</a>
+      <button type="submit" class="btn btn-solid">Confirmar racha</button>
+    </div>
+  </form>
+</main>
+<script src="script.js"></script>
+</body>
+</html>
